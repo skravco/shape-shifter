@@ -1,0 +1,29 @@
+name: Shape Shifter Email
+
+on:
+  schedule:
+    - cron: "0 7 * * *"  # Runs every day at 7 AM UTC
+
+jobs:
+  send_email:
+    runs-on: debian-latest  # Use Debian as the OS
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'  # Use the latest Python 3.x version
+
+      - name: Install dependencies
+        run: |
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Run workout program
+        env:
+          MAILTRAP_USERNAME: ${{ secrets.MAILTRAP_USERNAME }}
+          MAILTRAP_PASSWORD: ${{ secrets.MAILTRAP_PASSWORD }}
+        run: python main.py
+
